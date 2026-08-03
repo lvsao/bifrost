@@ -12,6 +12,7 @@ export interface Budget {
 
 export interface RateLimit {
 	id: string;
+	metric?: "tokens" | "requests";
 	// Flexible token limits
 	token_max_limit?: number; // Maximum tokens allowed
 	token_reset_duration?: string; // e.g., "30s", "5m", "1h", "1d", "1w", "1M"
@@ -361,10 +362,12 @@ export interface ModelConfig {
 	scope_name?: string; // Resolved, human-readable name of the scope target (read-only)
 	calendar_aligned?: boolean; // Snap budget resets to calendar boundaries (inherited from VK for vk scope)
 	rate_limit_id?: string;
+	rate_limit_ids?: string[];
 	// Populated relationships
 	budgets?: Budget[]; // Multi-budget: each with a distinct reset_duration
 	budget?: Budget; // Deprecated: superseded by budgets (kept for back-compat reads)
 	rate_limit?: RateLimit;
+	rate_limits?: RateLimit[];
 	created_at: string;
 	updated_at: string;
 }
@@ -377,6 +380,7 @@ export interface CreateModelConfigRequest {
 	scope_id?: string; // Required for non-global scopes (e.g. the virtual key ID)
 	budgets?: CreateBudgetRequest[];
 	rate_limit?: CreateRateLimitRequest;
+	rate_limits?: ModelRateLimitRuleRequest[];
 }
 
 export interface UpdateModelConfigRequest {
@@ -384,6 +388,7 @@ export interface UpdateModelConfigRequest {
 	provider?: string; // Optional provider - if empty/null, applies to all providers
 	budgets?: CreateBudgetRequest[]; // Full desired set; reconciled against existing
 	rate_limit?: UpdateRateLimitRequest;
+	rate_limits?: ModelRateLimitRuleRequest[];
 }
 
 export interface GetModelConfigsParams {
@@ -564,4 +569,13 @@ export interface UpdateProviderGovernanceRequest {
 export interface GetProviderGovernanceResponse {
 	providers: ProviderGovernance[];
 	count: number;
+}
+
+export type ModelRateLimitMetric = "tokens" | "requests";
+
+export interface ModelRateLimitRuleRequest {
+	id?: string;
+	metric: ModelRateLimitMetric;
+	max_limit: number;
+	reset_duration: string;
 }

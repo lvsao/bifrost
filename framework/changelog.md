@@ -16,3 +16,4 @@
 - fix: query creation from user input
 - fix: use `time.Now().Add` instead of channel receive for deadline
 - chore: upgraded core to v1.7.2
+- feat: support unlimited independent model-level request/token rate-limit windows with migration, enforcement, and safe legacy cleanup

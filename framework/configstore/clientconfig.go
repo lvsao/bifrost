@@ -1065,6 +1065,10 @@ func GenerateRateLimitHash(rl tables.TableRateLimit) (string, error) {
 	// Hash ID
 	hash.Write([]byte(rl.ID))
 
+	// Hash the metric discriminator so changing a model-owned rule from tokens
+	// to requests (or vice versa) cannot be mistaken for an unchanged row.
+	hash.Write([]byte("metric:" + rl.Metric))
+
 	// Hash TokenMaxLimit
 	if rl.TokenMaxLimit != nil {
 		data, err := sonic.Marshal(*rl.TokenMaxLimit)
@@ -1225,6 +1229,11 @@ func GenerateModelConfigHash(m tables.TableModelConfig) (string, error) {
 	sort.Strings(sortedBudgetIDs)
 	for _, id := range sortedBudgetIDs {
 		writeHashField(hash, "budget_ids", id)
+	}
+	sortedRateLimitIDs := append([]string(nil), m.RateLimitIDs...)
+	sort.Strings(sortedRateLimitIDs)
+	for _, id := range sortedRateLimitIDs {
+		writeHashField(hash, "rate_limit_ids", id)
 	}
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }

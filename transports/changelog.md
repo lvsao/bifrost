@@ -35,3 +35,4 @@
 - [#5074](https://github.com/maximhq/bifrost/issues/5074) - Fallback routing model selection is truncating model names
 - [#5108](https://github.com/maximhq/bifrost/issues/5108) - Bedrock Converse: reasoning_config/thinking silently dropped on cross-provider translation, fallbacks lose extended thinking
 - [#5308](https://github.com/maximhq/bifrost/issues/5308) - Responses API image blocks missing required "detail" field when converted from non-OpenAI providers
+- feat: expose model multi-rule rate-limit APIs, config schema support, and Model Limits UI for RPM/RPD/TPM/TPD combinations
